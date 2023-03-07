@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+}
+
+.input {
+  width: 100%;
+  border: solid 0.1rem var(--primary-300);
+  border-radius: 1rem;
+  padding: 0.8rem;
+  margin: 0.1rem;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  color: var(--primary-300);
+
+  &.error {
+    border: solid 0.1rem var(--danger);
+  }
+
+  &.success {
+    border: solid 0.1rem var(--success);
+  }
+
+  &:enabled {
+    &:focus,
+    &:hover {
+      outline: 0;
+      border: solid 0.2rem var(--primary-300);
+      margin: 0;
+
+      &.success {
+        box-shadow: none;
+        border: solid 0.1rem var(--success-400);
+        margin: 0.1rem;
+      }
+
+      &.error {
+        box-shadow: none;
+        border: solid 0.1rem var(--error-400);
+        margin: 0.1rem;
+      }
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.3rem var(--secondary-6);
+    }
+  }
+
+  &::-webkit-input-placeholder {
+    color: var(--primary-300);
+  }
+
+  &:disabled {
+    color: var(--text-secondary);
+    background-color: var(--primary-100);
+  }
+}
