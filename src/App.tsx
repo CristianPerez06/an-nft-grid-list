@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import './App.scss'
 import Header from './components/Header'
 import Content from './components/Content'
 import { Nft } from './types/types'
 import { mapNftFromRawNft } from './utilities/helpers'
 import ModalContextProvider from './components/shared/modal/ModalProvider'
 import Modal from './components/shared/modal/Modal'
+import Spinner from './components/shared/spinner/Spinner'
+
+import styles from './App.module.scss'
 
 type Component = () => JSX.Element
 
@@ -42,16 +44,6 @@ const App: Component = () => {
         .then((res) => {
           const { nfts } = res
           const nftsList = mapNftFromRawNft(nfts)
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
           setItems(nftsList)
         })
         .catch((err) => {
@@ -67,10 +59,14 @@ const App: Component = () => {
   }, [address])
 
   return (
-    <div className="app">
+    <div className={styles.app}>
       <ModalContextProvider>
         <Header onAddressSelected={handleOnAddressSelected} isDisabled={isLoading} />
-        {isLoading && 'Loading...'}
+        {isLoading && (
+          <div className={styles.loading}>
+            <Spinner />
+          </div>
+        )}
         {error && 'Error...'}
         {!isLoading && !error && <>{items ? <Content nfts={items} /> : <div>Please type in an address</div>}</>}
         <Modal />
