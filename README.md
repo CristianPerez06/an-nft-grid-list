@@ -1,6 +1,6 @@
-# \_\_altura-nft-challenge
+# altura-nft-challenge
 
-\_altura-nft-challenge.
+altura-nft-challenge.
 
 ## Tech stack
 
