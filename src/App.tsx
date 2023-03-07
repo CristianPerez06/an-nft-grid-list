@@ -18,25 +18,8 @@ const App: Component = () => {
   const [error, setError] = useState('')
   const [items, setItems] = useState<Nft[]>([])
 
-  const isAddressValid = (address: string) => {
-    return /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)
-  }
-
   const handleOnAddressSelected = useCallback((value: string) => {
-    // No address
-    if (!value) {
-      setError('')
-      setAddress('')
-      return
-    }
-
-    // Check address
-    if (isAddressValid(value)) {
-      setError('')
-      setAddress(value)
-    } else {
-      setError('Please type in an valid address')
-    }
+    setAddress(value)
   }, [])
 
   useEffect(() => {
@@ -52,7 +35,7 @@ const App: Component = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: '973ae94d-b20e-4941-9746-991b8d3c381b', // TO DO - Move to ENV variable
+          Authorization: process.env.REACT_APP_PRIVATE_KEY || '',
         },
       }
 
@@ -85,7 +68,7 @@ const App: Component = () => {
         {/* No typed in address */}
         {!isLoading && !error && !address && (
           <div className={styles.messageContainer}>
-            <Alert text="Please type in an address" className={styles.message} />
+            <Alert text="Please type in an valid address" className={styles.message} />
           </div>
         )}
 
@@ -97,7 +80,12 @@ const App: Component = () => {
         )}
 
         {/* Show nfts list */}
-        {!isLoading && !error && address && <Content nfts={items} />}
+        {!isLoading && !error && address && items.length !== 0 && <Content nfts={items} />}
+        {!isLoading && !error && address && items.length === 0 && (
+          <div className={styles.messageContainer}>
+            <Alert text="There are no nfts to display" className={styles.message} />
+          </div>
+        )}
 
         {/* Error */}
         {error && (

@@ -17,10 +17,25 @@ const Header: Comp = (props) => {
   const { onAddressSelected, isDisabled = false, className } = props
 
   const [address, setAddress] = useState('')
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
-  const handleOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.currentTarget.value)
-  }, [])
+  const isAddressValid = (address: string) => {
+    return /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)
+  }
+
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const addr = e.currentTarget.value
+    const valid = isAddressValid(addr)
+    console.log(valid)
+
+    if (valid) {
+      setIsValidAddress(true)
+    } else {
+      setIsValidAddress(false)
+    }
+
+    setAddress(addr)
+  }
 
   const handleOnClick = useCallback(() => {
     onAddressSelected?.(address)
@@ -29,7 +44,12 @@ const Header: Comp = (props) => {
   return (
     <div className={cn(styles.container, className)}>
       <Input placeholder="ETH Address" onChange={handleOnChange} className={styles.input} isDisabled={isDisabled} />
-      <Button content={'Show NFTs!'} onClick={handleOnClick} className={styles.button} isDisabled={isDisabled} />
+      <Button
+        content={'Show NFTs!'}
+        onClick={handleOnClick}
+        className={styles.button}
+        isDisabled={isDisabled || !address || !isValidAddress}
+      />
     </div>
   )
 }

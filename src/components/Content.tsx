@@ -16,15 +16,9 @@ const Content: Comp = (props) => {
 
   return (
     <div className={cn(styles.container, className)}>
-      {nfts.length === 0 ? (
-        <div className="message-container">
-          <p>No nfts to display</p>
-        </div>
-      ) : (
-        <div className={styles.gridContainer}>
-          <Grid nfts={nfts} />
-        </div>
-      )}
+      <div className={styles.gridContainer}>
+        <Grid nfts={nfts} />
+      </div>
     </div>
   )
 }

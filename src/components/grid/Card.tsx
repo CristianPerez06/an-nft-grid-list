@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import { ACTIONS as SIDE_PANEL_ACTIONS, useModalContext } from '../shared/modal/ModalProvider'
 import Details from '../Details'
 import NotFound from '../../assets/img/not-found.jpg'
+import Error from '../../assets/img/error.jpg'
 
 import cn from 'classnames'
 import styles from './Card.module.scss'
@@ -19,6 +20,10 @@ export const Card: Comp = (props: CardProps) => {
 
   const { dispatch } = useModalContext()
 
+  const handleOnImageError = (event: any) => {
+    event.currentTarget.src = Error
+  }
+
   const handleOnClose = useCallback(() => {
     dispatch?.({ type: SIDE_PANEL_ACTIONS.CLOSE })
   }, [])
@@ -29,9 +34,11 @@ export const Card: Comp = (props: CardProps) => {
 
   return (
     <div className={cn(styles.container, className)} onClick={handleOnClick}>
-      <div className={cn(styles.image)} style={{ backgroundImage: `url(${nft.imageUrl || NotFound})` }}></div>
+      <div className={styles.imageContainer}>
+        <img className={styles.image} src={nft.imageUrl || NotFound} onError={handleOnImageError} />
+      </div>
       <div className={cn(styles.description)}>
-        <p className={cn(styles.text)}>{nft.name}</p>
+        <p className={cn(styles.text)}>{nft.name || '-'}</p>
       </div>
     </div>
   )

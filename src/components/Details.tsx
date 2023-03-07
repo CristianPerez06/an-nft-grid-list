@@ -24,24 +24,24 @@ const Details: Comp = (props) => {
   return (
     <div className={cn(styles.container, className)}>
       <div className={styles.imageContainer}>
-        <div className={styles.image} style={{ backgroundImage: `url(${nft.imageUrl || NotFound})` }}></div>
+        <img className={styles.image} src={nft.imageUrl || NotFound} />
       </div>
       <div className={styles.description}>
         <div className={styles.textAndValue}>
-          <span className={styles.text}>Name: </span>
-          {nft.name}
+          <span className={styles.bold}>Name: </span>
+          {nft.name || '-'}
         </div>
         <div className={styles.textAndValue}>
-          <span className={styles.text}>Description: </span>
-          {nft.description}
+          <span className={styles.bold}>Description: </span>
+          {nft.description || '-'}
         </div>
         <div className={styles.textAndValue}>
-          <span className={styles.text}>Contract address: </span>
-          {nft.contractAddress}
+          <span className={styles.bold}>Contract address: </span>
+          {nft.contractAddress || '-'}
         </div>
         <div className={styles.textAndValue}>
-          <span className={styles.text}>Creator address: </span>
-          {nft.creatorAddress}
+          <span className={styles.bold}>Creator address: </span>
+          {nft.creatorAddress || '-'}
         </div>
       </div>
       <div className={styles.buttons}>
