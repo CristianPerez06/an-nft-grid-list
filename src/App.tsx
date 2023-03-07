@@ -42,6 +42,16 @@ const App: Component = () => {
         .then((res) => {
           const { nfts } = res
           const nftsList = mapNftFromRawNft(nfts)
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
           setItems(nftsList)
         })
         .catch((err) => {

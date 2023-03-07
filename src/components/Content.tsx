@@ -1,6 +1,8 @@
 import { Nft } from '../types/types'
+import Grid from './grid/Grid'
+
+import cn from 'classnames'
 import styles from './Content.module.scss'
-import Grid from './shared/grid/Grid'
 
 export interface ContentProps {
   nfts: Nft[]
@@ -10,10 +12,10 @@ export interface ContentProps {
 type Comp = (props: ContentProps) => JSX.Element
 
 const Content: Comp = (props) => {
-  const { nfts } = props
+  const { nfts, className } = props
 
   return (
-    <div className={styles.container}>
+    <div className={cn(styles.container, className)}>
       {nfts.length === 0 ? (
         <div className="message-container">
           <p>No nfts to display</p>

@@ -2,6 +2,7 @@ import { ChangeEvent, useCallback, useState } from 'react'
 import Button from './shared/button/Button'
 import Input from './shared/input/Input'
 
+import cn from 'classnames'
 import styles from './Header.module.scss'
 
 export interface HeaderProps {
@@ -13,7 +14,7 @@ export interface HeaderProps {
 type Comp = (props: HeaderProps) => JSX.Element
 
 const Header: Comp = (props) => {
-  const { onAddressSelected, isDisabled = false } = props
+  const { onAddressSelected, isDisabled = false, className } = props
 
   const [address, setAddress] = useState('')
 
@@ -26,7 +27,7 @@ const Header: Comp = (props) => {
   }, [address])
 
   return (
-    <div className={styles.container}>
+    <div className={cn(styles.container, className)}>
       <Input placeholder="Address" onChange={handleOnChange} className={styles.input} isDisabled={isDisabled} />
       <Button content={'Show NFTs!'} onClick={handleOnClick} className={styles.button} isDisabled={isDisabled} />
     </div>
