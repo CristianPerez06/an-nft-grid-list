@@ -9,7 +9,7 @@ const XIcon: Comp = (props) => {
 
   return (
     <svg fill={'transparent'} width={size} height={size} viewBox="0 0 24 24">
-      <g clip-path="url(#clip0_429_11081)">
+      <g clipPath="url(#clip0_429_11081)">
         <circle
           cx="12"
           cy="11.9999"

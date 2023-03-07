@@ -4,9 +4,16 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 10;
-  background-color: var(--primary-200);
-  opacity: 0.8;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary-300);
+  opacity: 0.9;
 }
 
 .buttonContainer {
@@ -22,7 +29,7 @@
   background: transparent;
   border: 0;
   padding: 0;
-  margin: 20px;
+  margin: 2rem 2rem 0.5rem 0;
   cursor: pointer;
   position: relative;
 }
@@ -34,4 +41,13 @@
 
 .content {
   height: 100%;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  z-index: 2;
+}
+
+.children {
+  display: flex;
+  justify-content: center;
 }
