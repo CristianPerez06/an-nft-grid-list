@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import XIcon from '../button/XIcon'
+import XIcon from './XIcon'
 import { ACTIONS as MODAL_ACTIONS, useModalContext } from './ModalProvider'
 
 import styles from './Modal.module.scss'
