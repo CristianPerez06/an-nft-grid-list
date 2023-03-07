@@ -3,6 +3,17 @@
   background-color: var(--primary-100);
 }
 
+.messageContainer {
+  margin-top: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message {
+  width: 210px;
+}
+
 .loading {
   padding: 3rem 0;
 }

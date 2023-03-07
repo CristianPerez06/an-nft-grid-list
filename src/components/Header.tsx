@@ -28,7 +28,7 @@ const Header: Comp = (props) => {
 
   return (
     <div className={cn(styles.container, className)}>
-      <Input placeholder="Address" onChange={handleOnChange} className={styles.input} isDisabled={isDisabled} />
+      <Input placeholder="ETH Address" onChange={handleOnChange} className={styles.input} isDisabled={isDisabled} />
       <Button content={'Show NFTs!'} onClick={handleOnClick} className={styles.button} isDisabled={isDisabled} />
     </div>
   )
