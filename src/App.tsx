@@ -1,21 +1,77 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import './App.scss'
 import Header from './components/Header'
 import Content from './components/Content'
+import { Nft } from './types/types'
+import { mapNftFromRawNft } from './utilities/helpers'
 
 type Component = () => JSX.Element
 
 const App: Component = () => {
   const [address, setAddress] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [items, setItems] = useState<Nft[] | undefined>()
 
   const handleOnAddressSelected = useCallback((value: string) => {
+    console.log(value)
     setAddress(value)
   }, [])
 
+  useEffect(() => {
+    if (!address) {
+      return
+    }
+
+    const fetchNFTs = async (addr: string) => {
+      const url = `https://api.nftport.xyz/v0/accounts/${addr}?chain=ethereum&include=metadata`
+      const params = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: '973ae94d-b20e-4941-9746-991b8d3c381b', // TO DO - Move to ENV variable
+        },
+      }
+
+      setIsLoading(true)
+      fetch(url, params)
+        .then((res) => {
+          return res.json()
+        })
+        .then((res) => {
+          const { nfts } = res
+          const nftsList = mapNftFromRawNft(nfts)
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+          nftsList.push(nftsList[0])
+
+          setItems(nftsList)
+        })
+        .catch((err) => {
+          console.log(err.message)
+          setError('Oops... Something went wrong. Please try again.')
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
+    }
+
+    fetchNFTs(address)
+  }, [address])
+
   return (
     <div className="app">
-      <Header onAddressSelected={handleOnAddressSelected} />
-      <Content address={address} />
+      <Header onAddressSelected={handleOnAddressSelected} isDisabled={isLoading} />
+      {isLoading && 'Loading...'}
+      {error && 'Error...'}
+      {!isLoading && !error && <>{items ? <Content nfts={items} /> : <div>Please type in an address</div>}</>}
     </div>
   )
 }

@@ -4,13 +4,13 @@
 
 .input {
   width: 100%;
-  border: solid 0.1rem var(--primary-300);
+  border: solid 0.1rem var(--primary-400);
   border-radius: 1rem;
   padding: 0.8rem;
   margin: 0.1rem;
   font-size: 1.6rem;
   line-height: 2rem;
-  color: var(--primary-300);
+  color: var(--primary-400);
 
   &.error {
     border: solid 0.1rem var(--danger);
@@ -24,7 +24,7 @@
     &:focus,
     &:hover {
       outline: 0;
-      border: solid 0.2rem var(--primary-300);
+      border: solid 0.2rem var(--primary-400);
       margin: 0;
 
       &.success {
