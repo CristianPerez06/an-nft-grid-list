@@ -4,6 +4,8 @@ import Header from './components/Header'
 import Content from './components/Content'
 import { Nft } from './types/types'
 import { mapNftFromRawNft } from './utilities/helpers'
+import ModalContextProvider from './components/shared/modal/ModalProvider'
+import Modal from './components/shared/modal/Modal'
 
 type Component = () => JSX.Element
 
@@ -14,7 +16,6 @@ const App: Component = () => {
   const [items, setItems] = useState<Nft[] | undefined>()
 
   const handleOnAddressSelected = useCallback((value: string) => {
-    console.log(value)
     setAddress(value)
   }, [])
 
@@ -41,17 +42,6 @@ const App: Component = () => {
         .then((res) => {
           const { nfts } = res
           const nftsList = mapNftFromRawNft(nfts)
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-          nftsList.push(nftsList[0])
-
           setItems(nftsList)
         })
         .catch((err) => {
@@ -68,10 +58,13 @@ const App: Component = () => {
 
   return (
     <div className="app">
-      <Header onAddressSelected={handleOnAddressSelected} isDisabled={isLoading} />
-      {isLoading && 'Loading...'}
-      {error && 'Error...'}
-      {!isLoading && !error && <>{items ? <Content nfts={items} /> : <div>Please type in an address</div>}</>}
+      <ModalContextProvider>
+        <Header onAddressSelected={handleOnAddressSelected} isDisabled={isLoading} />
+        {isLoading && 'Loading...'}
+        {error && 'Error...'}
+        {!isLoading && !error && <>{items ? <Content nfts={items} /> : <div>Please type in an address</div>}</>}
+        <Modal />
+      </ModalContextProvider>
     </div>
   )
 }
