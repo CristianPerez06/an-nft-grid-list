@@ -1,9 +1,8 @@
 import cn from 'classnames'
-
 import styles from './Button.module.scss'
 
 export interface ButtonProps {
-  content: string
+  content: string | JSX.Element
   isDisabled?: boolean
   onClick: () => void
   className?: string

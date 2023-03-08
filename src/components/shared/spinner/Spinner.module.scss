@@ -5,6 +5,7 @@
 
   --offset: 187px;
   --duration: 1.4s;
+  --single-color-stroke: var(--white);
 }
 
 .spinner {
@@ -24,8 +25,14 @@
   stroke-dasharray: var(--offset);
   stroke-dashoffset: 0;
   transform-origin: center;
+}
 
+.withColors {
   animation: dash var(--duration) ease-in-out infinite, useColors calc(var(--duration) * 4) ease-in-out infinite;
+}
+
+.withSingleColor {
+  animation: dash var(--duration) ease-in-out infinite, useSingleColor calc(var(--duration) * 4) ease-in-out infinite;
 }
 
 @keyframes useColors {
@@ -43,6 +50,24 @@
   }
   100% {
     stroke: var(--primary-400);
+  }
+}
+
+@keyframes useSingleColor {
+  0% {
+    stroke: var(--single-color-stroke);
+  }
+  25% {
+    stroke: var(--single-color-stroke);
+  }
+  50% {
+    stroke: var(--single-color-stroke);
+  }
+  75% {
+    stroke: var(--single-color-stroke);
+  }
+  100% {
+    stroke: var(--single-color-stroke);
   }
 }
 

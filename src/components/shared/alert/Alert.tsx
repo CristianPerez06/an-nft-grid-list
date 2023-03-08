@@ -1,13 +1,13 @@
 import cn from 'classnames'
 import styles from './Alert.module.scss'
 
-export enum TYPE {
+export enum Type {
   DEFAULT = 'default',
   DANGER = 'danger',
 }
 
 export interface AlertProps {
-  type?: TYPE
+  type?: Type
   text: string
   className?: string
 }
@@ -15,7 +15,7 @@ export interface AlertProps {
 type Comp = (props: AlertProps) => JSX.Element
 
 const Alert: Comp = (props) => {
-  const { type = TYPE.DEFAULT, text, className } = props
+  const { type = Type.DEFAULT, text, className } = props
   return <div className={cn(styles.container, className, styles[type])}>{text}</div>
 }
 
