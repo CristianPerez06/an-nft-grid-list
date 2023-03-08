@@ -17,3 +17,39 @@
 .loading {
   padding: 3rem 0;
 }
+
+.main {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+  background-color: var(--primary-100);
+}
+
+.gridContainer {
+  width: 1000px;
+}
+
+.pagination {
+  margin-top: 4rem;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin: 3rem 0;
+}
+
+// Overrides
+.loadMore {
+  width: 300px;
+  margin: 0 2rem;
+  background-color: var(--primary-500);
+
+  border: 0.1rem solid var(--primary-600);
+  color: var(--white);
+  background-color: var(--primary-500);
+
+  &:hover {
+    background-color: var(--primary-600);
+  }
+}
