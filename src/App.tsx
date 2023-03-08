@@ -81,6 +81,10 @@ const App: Component = () => {
   }, [address, continuation])
 
   useEffect(() => {
+    // On first load don't scroll page
+    if (!continuation) {
+      return
+    }
     scrollToBottom()
   }, [items])
 
