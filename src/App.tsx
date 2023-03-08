@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Header from './components/Header'
-import Content from './components/Content'
 import { Nft } from './types/types'
 import { mapNftFromRawNft } from './utilities/helpers'
 import ModalContextProvider from './components/shared/modal/ModalProvider'
@@ -9,18 +8,34 @@ import Spinner from './components/shared/spinner/Spinner'
 import Alert, { TYPE } from './components/shared/alert/Alert'
 
 import styles from './App.module.scss'
+import Grid from './components/grid/Grid'
+import Button from './components/shared/button/Button'
 
 type Component = () => JSX.Element
 
 const App: Component = () => {
   const [address, setAddress] = useState('')
+  const [nextPage, setNextPage] = useState('')
+  const [continuation, setContinuation] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [items, setItems] = useState<Nft[]>([])
 
+  const PAGE_SIZE = 25
+
   const handleOnAddressSelected = useCallback((value: string) => {
     setAddress(value)
   }, [])
+
+  const handleOnLoadMoreClick = useCallback(() => {
+    setContinuation(nextPage)
+  }, [nextPage])
+
+  const messagesEndRef = useRef<any>()
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView()
+  }
 
   useEffect(() => {
     // No Address available - Don't try to call the API
@@ -29,8 +44,11 @@ const App: Component = () => {
     }
 
     // Address available - Call the API
-    const fetchNFTs = async (addr: string) => {
-      const url = `https://api.nftport.xyz/v0/accounts/${addr}?chain=ethereum&include=metadata`
+    const fetchNFTs = async (account: string, cont: string) => {
+      let url = `https://api.nftport.xyz/v0/accounts/${account}?chain=ethereum&page_size=${PAGE_SIZE}&include=metadata`
+      if (cont) {
+        url = url + `&continuation=${cont}`
+      }
       const params = {
         method: 'GET',
         headers: {
@@ -45,9 +63,10 @@ const App: Component = () => {
           return res.json()
         })
         .then((res) => {
-          const { nfts } = res
+          const { nfts, continuation } = res
           const nftsList = mapNftFromRawNft(nfts)
-          setItems(nftsList)
+          setNextPage(continuation)
+          setItems((prev) => [...prev, ...nftsList])
         })
         .catch((err) => {
           console.log(err.message)
@@ -58,13 +77,18 @@ const App: Component = () => {
         })
     }
 
-    fetchNFTs(address)
-  }, [address])
+    fetchNFTs(address, continuation)
+  }, [address, continuation])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [items])
 
   return (
     <div className={styles.app}>
       <ModalContextProvider>
         <Header onAddressSelected={handleOnAddressSelected} isDisabled={isLoading} />
+
         {/* No typed in address */}
         {!isLoading && !error && !address && (
           <div className={styles.messageContainer}>
@@ -72,15 +96,7 @@ const App: Component = () => {
           </div>
         )}
 
-        {/* Loading */}
-        {isLoading && (
-          <div className={styles.loading}>
-            <Spinner />
-          </div>
-        )}
-
-        {/* Show nfts list */}
-        {!isLoading && !error && address && items.length !== 0 && <Content nfts={items} />}
+        {/* Ask for a user address */}
         {!isLoading && !error && address && items.length === 0 && (
           <div className={styles.messageContainer}>
             <Alert text="There are no nfts to display" className={styles.message} />
@@ -94,6 +110,26 @@ const App: Component = () => {
           </div>
         )}
 
+        {/* Loading */}
+        {isLoading && (
+          <div className={styles.loading}>
+            <Spinner />
+          </div>
+        )}
+
+        {/* Show nfts list */}
+        {!isLoading && !error && address && items.length !== 0 && (
+          <div className={styles.main}>
+            <div className={styles.gridContainer}>
+              <Grid nfts={items} />
+              <div className={styles.buttonContainer}>
+                <Button content={'Load more!'} onClick={handleOnLoadMoreClick} className={styles.loadMore} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div ref={messagesEndRef} />
         <Modal />
       </ModalContextProvider>
     </div>

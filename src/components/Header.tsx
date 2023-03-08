@@ -26,7 +26,6 @@ const Header: Comp = (props) => {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const addr = e.currentTarget.value
     const valid = isAddressValid(addr)
-    console.log(valid)
 
     if (valid) {
       setIsValidAddress(true)
