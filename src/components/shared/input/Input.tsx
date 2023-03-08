@@ -8,8 +8,6 @@ export interface InputProps {
   placeholder?: string
   maxLength?: number
   isDisabled?: boolean
-  isSuccess?: boolean
-  isError?: boolean
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   className?: string
 }
@@ -17,7 +15,7 @@ export interface InputProps {
 type Comp = (props: InputProps) => JSX.Element
 
 export const Input: Comp = (props: InputProps) => {
-  const { defaultValue, placeholder, maxLength, isDisabled = false, isSuccess, isError, onChange, className } = props
+  const { defaultValue, placeholder, maxLength, isDisabled = true, onChange, className } = props
 
   return (
     <div className={cn(styles.container, className)}>
@@ -26,7 +24,7 @@ export const Input: Comp = (props: InputProps) => {
         placeholder={placeholder}
         maxLength={maxLength}
         disabled={isDisabled}
-        className={cn(styles.input, isSuccess && styles.success, isError && styles.error)}
+        className={cn(styles.input)}
         onChange={onChange}
       />
     </div>

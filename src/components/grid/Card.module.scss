@@ -12,6 +12,11 @@
   cursor: pointer;
 }
 
+.imageContainer {
+  height: 160px;
+  width: 100%;
+}
+
 .image {
   width: 100%;
   height: 100%;
@@ -31,6 +36,7 @@
 }
 
 .text {
+  margin: 0;
   padding: 0 0.5rem;
   overflow: hidden;
   white-space: nowrap;

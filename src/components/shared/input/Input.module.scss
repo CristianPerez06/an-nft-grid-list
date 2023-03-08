@@ -12,32 +12,12 @@
   line-height: 2rem;
   color: var(--primary-400);
 
-  &.error {
-    border: solid 0.1rem var(--danger);
-  }
-
-  &.success {
-    border: solid 0.1rem var(--success);
-  }
-
   &:enabled {
     &:focus,
     &:hover {
       outline: 0;
       border: solid 0.2rem var(--primary-400);
       margin: 0;
-
-      &.success {
-        box-shadow: none;
-        border: solid 0.1rem var(--success-400);
-        margin: 0.1rem;
-      }
-
-      &.error {
-        box-shadow: none;
-        border: solid 0.1rem var(--error-400);
-        margin: 0.1rem;
-      }
     }
 
     &:focus {
@@ -50,7 +30,7 @@
   }
 
   &:disabled {
-    color: var(--text-secondary);
+    color: var(--primary-200);
     background-color: var(--primary-100);
   }
 }
