@@ -26,3 +26,11 @@ This example is deployed on [Render](https://render.com/) using a free account. 
 - Extensive use may affect performance.
 
 Go to [live example](https://an-nft-grid-list.onrender.com/)
+
+## Example data
+If you're new to using Ethereum, you may not have an ETH address yet. You can still test the app by using one of the example addresses provided by NFTPort. Simply enter the address into the appropriate field and follow the prompts to begin using the app:
+<pre>
+  - 0x942878558bC523777fE11e6d725AF93c86458050
+  - 0x599aa2feaeec1c4caa33da6b7fbd0e6578953c96
+  - 0x51688cd36c18891167e8036bde2a8fb10ec80c43
+</pre>
