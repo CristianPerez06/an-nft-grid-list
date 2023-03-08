@@ -1,8 +1,8 @@
-import cn from 'classnames'
-
-import styles from './Grid.module.scss'
 import { Nft } from '../../types/types'
 import Card from './Card'
+
+import cn from 'classnames'
+import styles from './Grid.module.scss'
 
 export interface GridProps {
   nfts: Nft[]
@@ -16,8 +16,8 @@ export const Grid: Comp = (props: GridProps) => {
 
   return (
     <div className={cn(styles.container, className)}>
-      {nfts.map((nft: Nft, index) => {
-        return <Card key={index} nft={nft} />
+      {nfts.map((nft: Nft) => {
+        return <Card key={`${nft.tokenId}_${nft.contractAddress}`} nft={nft} />
       })}
     </div>
   )

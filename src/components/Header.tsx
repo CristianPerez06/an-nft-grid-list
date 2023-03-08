@@ -19,9 +19,12 @@ const Header: Comp = (props) => {
   const [address, setAddress] = useState('')
   const [isValidAddress, setIsValidAddress] = useState(false)
 
-  const isAddressValid = (address: string) => {
-    return /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)
-  }
+  const isAddressValid = useCallback(
+    (address: string) => {
+      return /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)
+    },
+    [address]
+  )
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const addr = e.currentTarget.value

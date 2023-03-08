@@ -1,139 +1,148 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import Header from './components/Header'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Nft } from './types/types'
 import { mapNftFromRawNft } from './utilities/helpers'
 import ModalContextProvider from './components/shared/modal/ModalProvider'
+import Header from './components/Header'
 import Modal from './components/shared/modal/Modal'
-import Spinner from './components/shared/spinner/Spinner'
-import Alert, { TYPE } from './components/shared/alert/Alert'
+import Grid from './components/grid/Grid'
+import { Type as AlertType } from './components/shared/alert/Alert'
+import GridLoadMoreButton from './components/grid/shared/GridLoadMoreButton'
+import GridAlert from './components/grid/shared/GridAlert'
+import GridLoader from './components/grid/shared/GridLoader'
 
 import styles from './App.module.scss'
-import Grid from './components/grid/Grid'
-import Button from './components/shared/button/Button'
 
 type Component = () => JSX.Element
 
 const App: Component = () => {
-  const [address, setAddress] = useState('')
-  const [nextPage, setNextPage] = useState('')
-  const [continuation, setContinuation] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [items, setItems] = useState<Nft[]>([])
+  const emptyNftList: Nft[] = []
+
+  const initialState = {
+    address: '',
+    nextPage: '',
+    nextContinuation: '',
+    isLoading: false,
+    error: '',
+    items: emptyNftList,
+  }
+
+  const [appState, setAppState] = useState(initialState)
 
   const PAGE_SIZE = 25
 
   const handleOnAddressSelected = useCallback((value: string) => {
-    setAddress(value)
+    setAppState((prev) => {
+      return {
+        ...prev,
+        address: value,
+      }
+    })
   }, [])
 
   const handleOnLoadMoreClick = useCallback(() => {
-    setContinuation(nextPage)
-  }, [nextPage])
+    const next = appState.nextPage
+    setAppState((prev) => {
+      return {
+        ...prev,
+        nextContinuation: next,
+      }
+    })
+  }, [appState.nextPage])
 
-  const messagesEndRef = useRef<any>()
+  const fetchNFTs = async (account: string, cont: string) => {
+    let url = `https://api.nftport.xyz/v0/accounts/${account}?chain=ethereum&page_size=${PAGE_SIZE}&include=metadata`
+    if (cont) {
+      url = url + `&continuation=${cont}`
+    }
+    const params = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: process.env.REACT_APP_PRIVATE_KEY || '',
+      },
+    }
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView()
+    setAppState((prev) => {
+      return {
+        ...prev,
+        error: '',
+        isLoading: true,
+      }
+    })
+
+    fetch(url, params)
+      .then((res) => {
+        return res.json()
+      })
+      .then((res) => {
+        const { nfts, continuation } = res
+        const nftsList = mapNftFromRawNft(nfts)
+
+        const prevItems = appState.items as Nft[]
+        setAppState((prev) => {
+          return {
+            ...prev,
+            nextPage: continuation,
+            isLoading: false,
+            items: [...prevItems, ...nftsList],
+          }
+        })
+      })
+      .catch((err) => {
+        console.log(err.message)
+        setAppState((prev) => {
+          return {
+            ...prev,
+            isLoading: false,
+            error: 'Oops... Something went wrong. Please try again.',
+          }
+        })
+      })
   }
 
   useEffect(() => {
     // No Address available - Don't try to call the API
-    if (!address) {
+    if (!appState.address) {
       return
     }
 
     // Address available - Call the API
-    const fetchNFTs = async (account: string, cont: string) => {
-      let url = `https://api.nftport.xyz/v0/accounts/${account}?chain=ethereum&page_size=${PAGE_SIZE}&include=metadata`
-      if (cont) {
-        url = url + `&continuation=${cont}`
-      }
-      const params = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: process.env.REACT_APP_PRIVATE_KEY || '',
-        },
-      }
-
-      setIsLoading(true)
-      fetch(url, params)
-        .then((res) => {
-          return res.json()
-        })
-        .then((res) => {
-          const { nfts, continuation } = res
-          const nftsList = mapNftFromRawNft(nfts)
-          setNextPage(continuation)
-          setItems((prev) => [...prev, ...nftsList])
-        })
-        .catch((err) => {
-          console.log(err.message)
-          setError('Oops... Something went wrong. Please try again.')
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
-    }
-
-    fetchNFTs(address, continuation)
-  }, [address, continuation])
-
-  useEffect(() => {
-    // On first load don't scroll page
-    if (!continuation) {
-      return
-    }
-    scrollToBottom()
-  }, [items])
+    fetchNFTs(appState.address, appState.nextContinuation)
+  }, [appState.address, appState.nextContinuation])
 
   return (
     <div className={styles.app}>
       <ModalContextProvider>
-        <Header onAddressSelected={handleOnAddressSelected} isDisabled={isLoading} />
+        <Header onAddressSelected={handleOnAddressSelected} isDisabled={appState.isLoading} />
+
+        {/* Show Loading spinner only on first load */}
+        {appState.isLoading && appState.items.length === 0 && <GridLoader />}
 
         {/* No typed in address */}
-        {!isLoading && !error && !address && (
-          <div className={styles.messageContainer}>
-            <Alert text="Please type in an valid address" className={styles.message} />
-          </div>
-        )}
+        {!appState.error && !appState.address && <GridAlert text="Please type in an valid address" />}
 
         {/* Ask for a user address */}
-        {!isLoading && !error && address && items.length === 0 && (
-          <div className={styles.messageContainer}>
-            <Alert text="There are no nfts to display" className={styles.message} />
-          </div>
+        {!appState.isLoading && !appState.error && appState.address && appState.items.length === 0 && (
+          <GridAlert text="There are no nfts to display" />
         )}
 
         {/* Error */}
-        {error && (
-          <div className={styles.messageContainer}>
-            <Alert text={error} type={TYPE.DANGER} className={styles.message} />
-          </div>
-        )}
-
-        {/* Loading */}
-        {isLoading && (
-          <div className={styles.loading}>
-            <Spinner />
-          </div>
-        )}
+        {appState.error && <GridAlert text={appState.error} type={AlertType.DANGER} />}
 
         {/* Show nfts list */}
-        {!isLoading && !error && address && items.length !== 0 && (
+        {!appState.error && appState.items.length !== 0 && (
           <div className={styles.main}>
             <div className={styles.gridContainer}>
-              <Grid nfts={items} />
-              <div className={styles.buttonContainer}>
-                <Button content={'Load more!'} onClick={handleOnLoadMoreClick} className={styles.loadMore} />
-              </div>
+              {/* Nft list */}
+              <Grid nfts={appState.items} />
+
+              {/* Load More button - Only if next page is available */}
+              {!!appState.nextPage && (
+                <GridLoadMoreButton isLoading={appState.isLoading} onClick={handleOnLoadMoreClick} />
+              )}
             </div>
           </div>
         )}
-
-        <div ref={messagesEndRef} />
         <Modal />
       </ModalContextProvider>
     </div>

@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { Nft } from '../types/types'
 import Button from './shared/button/Button'
-import NotFound from '../assets/img/not-found.jpg'
+import NotFoundImage from '../assets/img/not-found.jpg'
+import ErrorImage from '../assets/img/error.jpg'
 
 import cn from 'classnames'
 import styles from './Details.module.scss'
@@ -17,6 +18,10 @@ type Comp = (props: DetailsProps) => JSX.Element
 const Details: Comp = (props) => {
   const { nft, className, onCloseClick } = props
 
+  const handleOnImageError = useCallback((event: any) => {
+    event.currentTarget.src = ErrorImage
+  }, [])
+
   const handleOnCancel = useCallback(() => {
     onCloseClick()
   }, [])
@@ -24,7 +29,7 @@ const Details: Comp = (props) => {
   return (
     <div className={cn(styles.container, className)}>
       <div className={styles.imageContainer}>
-        <img className={styles.image} src={nft.imageUrl || NotFound} />
+        <img className={styles.image} src={nft.imageUrl || NotFoundImage} onError={handleOnImageError} />
       </div>
       <div className={styles.description}>
         <div className={styles.textAndValue}>

@@ -2,8 +2,8 @@ import { Nft } from '../../types/types'
 import { useCallback } from 'react'
 import { ACTIONS as SIDE_PANEL_ACTIONS, useModalContext } from '../shared/modal/ModalProvider'
 import Details from '../Details'
-import NotFound from '../../assets/img/not-found.jpg'
-import Error from '../../assets/img/error.jpg'
+import NotFoundImage from '../../assets/img/not-found.jpg'
+import ErrorImage from '../../assets/img/error.jpg'
 
 import cn from 'classnames'
 import styles from './Card.module.scss'
@@ -21,7 +21,7 @@ export const Card: Comp = (props: CardProps) => {
   const { dispatch } = useModalContext()
 
   const handleOnImageError = (event: any) => {
-    event.currentTarget.src = Error
+    event.currentTarget.src = ErrorImage
   }
 
   const handleOnClose = useCallback(() => {
@@ -35,7 +35,7 @@ export const Card: Comp = (props: CardProps) => {
   return (
     <div className={cn(styles.container, className)} onClick={handleOnClick}>
       <div className={styles.imageContainer}>
-        <img className={styles.image} src={nft.imageUrl || NotFound} onError={handleOnImageError} />
+        <img className={styles.image} src={nft.imageUrl || NotFoundImage} onError={handleOnImageError} />
       </div>
       <div className={cn(styles.description)}>
         <p className={cn(styles.text)}>{nft.name || '-'}</p>
