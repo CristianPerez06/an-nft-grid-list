@@ -1,30 +1,27 @@
-import { ChangeEvent, useCallback, useState } from 'react'
+import { ChangeEvent, useRef, useState } from 'react'
+import cn from 'classnames'
 import Button from './shared/button/Button'
 import Input from './shared/input/Input'
-
-import cn from 'classnames'
 import styles from './Header.module.scss'
 
 export interface HeaderProps {
-  onAddressSelected: (value: string) => void
   isDisabled?: boolean
-  className?: string
+  onAddressSelected: (value: string) => void
+  customContainer?: string
 }
 
 type Comp = (props: HeaderProps) => JSX.Element
 
 const Header: Comp = (props) => {
-  const { onAddressSelected, isDisabled = false, className } = props
+  const { isDisabled = false, onAddressSelected, customContainer } = props
 
+  const previousValidAddress = useRef('')
   const [address, setAddress] = useState('')
   const [isValidAddress, setIsValidAddress] = useState(false)
 
-  const isAddressValid = useCallback(
-    (address: string) => {
-      return /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)
-    },
-    [address]
-  )
+  const isAddressValid = (address: string) => {
+    return /^(0x){1}[0-9a-fA-F]{40}$/i.test(address)
+  }
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const addr = e.currentTarget.value
@@ -39,18 +36,21 @@ const Header: Comp = (props) => {
     setAddress(addr)
   }
 
-  const handleOnClick = useCallback(() => {
+  const handleOnClick = () => {
+    previousValidAddress.current = address
     onAddressSelected?.(address)
-  }, [address])
+  }
+
+  const shouldDisableButton = isDisabled || !address || !isValidAddress || previousValidAddress.current === address
 
   return (
-    <div className={cn(styles.container, className)}>
+    <div className={cn(styles.container, customContainer)}>
       <Input placeholder="ETH Address" onChange={handleOnChange} className={styles.input} isDisabled={isDisabled} />
       <Button
         content={'Show NFTs!'}
         onClick={handleOnClick}
-        className={styles.button}
-        isDisabled={isDisabled || !address || !isValidAddress}
+        customContainer={styles.button}
+        isDisabled={shouldDisableButton}
       />
     </div>
   )
