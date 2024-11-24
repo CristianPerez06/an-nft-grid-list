@@ -57,7 +57,7 @@ const Details: Comp = (props) => {
         >
           Go to Opensea
         </a>
-        <Button content={'Cancel'} onClick={handleOnCancel} className={styles.button} />
+        <Button content={'Cancel'} onClick={handleOnCancel} customContainer={styles.button} />
       </div>
     </div>
   )

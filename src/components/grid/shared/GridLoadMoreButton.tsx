@@ -23,7 +23,8 @@ const GridLoadMoreButton: Comp = (props) => {
       <Button
         content={isLoading ? <Spinner size={16} type={SpinnerType.CONTENT} /> : 'Load more!'}
         onClick={handleOnClick}
-        className={styles.loadMore}
+        customContainer={styles.loadMore}
+        isDisabled={isLoading}
       />
     </div>
   )

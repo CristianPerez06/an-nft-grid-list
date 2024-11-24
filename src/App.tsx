@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Nft } from './types/types'
 import { mapNftFromRawNft } from './utilities/helpers'
 import ModalContextProvider from './components/shared/modal/ModalProvider'
@@ -19,8 +19,8 @@ const App: Component = () => {
 
   const initialState = {
     address: '',
-    nextPage: '',
-    nextContinuation: '',
+    pageKey: '',
+    nextPageKey: '',
     isLoading: false,
     error: '',
     items: emptyNftList,
@@ -28,39 +28,37 @@ const App: Component = () => {
 
   const [appState, setAppState] = useState(initialState)
 
+  const API_KEY = '7KyCt79SL8W_zUSldk-I0KzePyhh4JMm'
   const PAGE_SIZE = 25
 
-  const handleOnAddressSelected = useCallback((value: string) => {
+  const handleOnAddressSelected = (value: string) => {
     setAppState((prev) => {
       return {
         ...prev,
         address: value,
+        pageKey: '',
+        nextPageKey: '',
+        items: [],
       }
     })
-  }, [])
+  }
 
-  const handleOnLoadMoreClick = useCallback(() => {
-    const next = appState.nextPage
+  const handleOnLoadMoreClick = () => {
+    const pageKey = appState.nextPageKey
     setAppState((prev) => {
       return {
         ...prev,
-        nextContinuation: next,
+        pageKey: pageKey,
       }
     })
-  }, [appState.nextPage])
+  }
 
-  const fetchNFTs = async (account: string, cont: string) => {
-    let url = `https://api.nftport.xyz/v0/accounts/${account}?chain=ethereum&page_size=${PAGE_SIZE}&include=metadata`
-    if (cont) {
-      url = url + `&continuation=${cont}`
+  const fetchNFTs = async (account: string, nextPageKey?: string) => {
+    let url = `https://eth-mainnet.g.alchemy.com/nft/v3/${API_KEY}/getNFTsForOwner?owner=${account}&withMetadata=true&pageSize=${PAGE_SIZE}`
+    if (nextPageKey) {
+      url = url + `&pageKey=${nextPageKey}`
     }
-    const params = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: process.env.REACT_APP_PRIVATE_KEY || '',
-      },
-    }
+    const options = { method: 'GET', headers: { accept: 'application/json' } }
 
     setAppState((prev) => {
       return {
@@ -70,19 +68,19 @@ const App: Component = () => {
       }
     })
 
-    fetch(url, params)
+    fetch(url, options)
       .then((res) => {
         return res.json()
       })
       .then((res) => {
-        const { nfts, continuation } = res
-        const nftsList = mapNftFromRawNft(nfts)
+        const { ownedNfts, pageKey } = res
+        const nftsList = mapNftFromRawNft(ownedNfts)
 
         const prevItems = appState.items as Nft[]
         setAppState((prev) => {
           return {
             ...prev,
-            nextPage: continuation,
+            nextPageKey: pageKey,
             isLoading: false,
             items: [...prevItems, ...nftsList],
           }
@@ -107,8 +105,8 @@ const App: Component = () => {
     }
 
     // Address available - Call the API
-    fetchNFTs(appState.address, appState.nextContinuation)
-  }, [appState.address, appState.nextContinuation])
+    fetchNFTs(appState.address, appState.pageKey)
+  }, [appState.address, appState.pageKey])
 
   return (
     <div className={styles.app}>
@@ -137,7 +135,7 @@ const App: Component = () => {
               <Grid nfts={appState.items} />
 
               {/* Load More button - Only if next page is available */}
-              {!!appState.nextPage && (
+              {!!appState.nextPageKey && (
                 <GridLoadMoreButton isLoading={appState.isLoading} onClick={handleOnLoadMoreClick} />
               )}
             </div>
