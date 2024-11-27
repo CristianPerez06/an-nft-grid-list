@@ -35,7 +35,7 @@ export const Card: Comp = (props: CardProps) => {
   return (
     <div className={cn(styles.container, className)} onClick={handleOnClick}>
       <div className={styles.imageContainer}>
-        <img className={styles.image} src={nft.imageUrl || NotFoundImage} onError={handleOnImageError} />
+        <img className={styles.image} src={nft.thumbnailUrl || NotFoundImage} onError={handleOnImageError} />
       </div>
       <div className={cn(styles.description)}>
         <p className={cn(styles.text)}>{nft.name || '-'}</p>
