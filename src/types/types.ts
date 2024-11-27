@@ -29,7 +29,7 @@ export interface Nft {
   tokenId: string
   name: string
   description: string
-  fileUrl: string
   creatorAddress: string
-  imageUrl: string
+  thumbnailUrl: string
+  fullUrl: string
 }

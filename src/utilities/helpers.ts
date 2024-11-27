@@ -7,9 +7,9 @@ export const mapNftFromRawNft = (rawNfts: RawNft[]) => {
       tokenId: rawNft.tokenId,
       name: rawNft.name,
       description: rawNft.description,
-      fileUrl: rawNft.image.pngUrl,
       creatorAddress: rawNft.contract.contractDeployer,
-      imageUrl: rawNft.image.pngUrl,
+      thumbnailUrl: rawNft.image.thumbnailUrl,
+      fullUrl: rawNft.image.pngUrl,
     }
   })
   return nfts

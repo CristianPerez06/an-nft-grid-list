@@ -14,17 +14,14 @@
   &:hover {
     background-color: var(--primary-500);
     color: var(--white);
-
-    &:disabled {
-      background: #f5f4ff;
-      color: var(--primary-300);
-      opacity: 0.3;
-      cursor: default;
-    }
   }
 
   &:disabled {
-    background: #f5f4ff;
+    &:hover {
+      background-color: var(--white);
+      color: var(--primary-300);
+    }
+
     color: var(--primary-300);
     opacity: 0.3;
     cursor: default;

@@ -29,7 +29,7 @@ const Details: Comp = (props) => {
   return (
     <div className={cn(styles.container, className)}>
       <div className={styles.imageContainer}>
-        <img className={styles.image} src={nft.imageUrl || NotFoundImage} onError={handleOnImageError} />
+        <img className={styles.image} src={nft.fullUrl || NotFoundImage} onError={handleOnImageError} />
       </div>
       <div className={styles.description}>
         <div className={styles.textAndValue}>
