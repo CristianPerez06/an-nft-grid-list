@@ -28,7 +28,8 @@ const App: Component = () => {
 
   const [appState, setAppState] = useState(initialState)
 
-  const API_KEY = '7KyCt79SL8W_zUSldk-I0KzePyhh4JMm'
+  const API_KEY = process.env.REACT_APP_PRIVATE_KEY || ''
+  
   const PAGE_SIZE = 25
 
   const handleOnAddressSelected = (value: string) => {
