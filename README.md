@@ -15,9 +15,10 @@ An app that fetches and displays NFTs owned by any Ethereum address using the NF
 
 ### Prerequisites
 
-Before running the development server, you need to set up Alchemy NFT API KEY :
+Before running the development server, you need to set up the connection to Alchemy NFT API.
 
-**Set Environment Variables:**
+**Set Environment Variables**
+
 Create a `.env` file in the root directory and add:
 
 ```
